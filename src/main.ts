@@ -1,4 +1,13 @@
-import { ItemView, Plugin, TFile, WorkspaceLeaf } from "obsidian";
+import {
+	App,
+	ItemView,
+	Modal,
+	Plugin,
+	Setting,
+	TFile,
+	WorkspaceLeaf,
+} from "obsidian";
+import { CanvasNode } from "obsidian-typings";
 
 interface CanvasNodeData {
 	id: string;
@@ -15,6 +24,19 @@ export default class CanvasImageLinkPlugin extends Plugin {
 			window,
 			"dblclick",
 			this.handleDblClick.bind(this),
+		);
+
+		this.registerEvent(
+			this.app.workspace.on("canvas:node-menu", (menu, node) => {
+				menu.addItem((item) => {
+					item.setTitle("Set link")
+						.setIcon("link")
+						.onClick(() => {
+							console.log("Node clicked:", node);
+							new SampleModal(this.app, node).open();
+						});
+				});
+			}),
 		);
 	}
 
@@ -39,5 +61,29 @@ export default class CanvasImageLinkPlugin extends Plugin {
 				}
 			}
 		}
+	}
+}
+
+class SampleModal extends Modal {
+	constructor(app: App, node: CanvasNode) {
+		super(app);
+		//this.setTitle("What's your name?");
+
+		let link = "";
+		new Setting(this.contentEl).setName("Link").addText((text) =>
+			text.onChange((value) => {
+				link = value;
+			}),
+		);
+
+		new Setting(this.contentEl).addButton((btn) =>
+			btn
+				.setButtonText("Submit")
+				.setCta()
+				.onClick(() => {
+					this.close();
+					node.setData({ link: link });
+				}),
+		);
 	}
 }
