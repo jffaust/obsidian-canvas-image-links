@@ -18,7 +18,7 @@ export default class CanvasImageLinkPlugin extends Plugin {
 					item.setTitle("Set link")
 						.setIcon("link")
 						.onClick(() => {
-							new SampleModal(this.app, node).open();
+							new EditLinkModal(this.app, node).open();
 						});
 				});
 
@@ -44,7 +44,7 @@ export default class CanvasImageLinkPlugin extends Plugin {
 				if (!isValidNodeType(node)) return false;
 
 				if (!checking) {
-					new SampleModal(this.app, node).open();
+					new EditLinkModal(this.app, node).open();
 				}
 				return true;
 			},
@@ -99,7 +99,7 @@ function sanitizeLink(link: string): string {
 	return `https://${link}`;
 }
 
-class SampleModal extends Modal {
+class EditLinkModal extends Modal {
 	constructor(app: App, node: any) {
 		super(app);
 		this.setTitle("Set node link");
