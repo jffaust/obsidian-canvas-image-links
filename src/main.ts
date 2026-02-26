@@ -23,11 +23,13 @@ export default class CanvasImageLinkPlugin extends Plugin {
 		this.registerDomEvent(
 			window,
 			"dblclick",
-			this.handleDblClick.bind(this),
+			this.tryOpenSelectedNodeLink.bind(this),
 		);
 
 		this.registerEvent(
 			this.app.workspace.on("canvas:node-menu", (menu, node) => {
+				if (!this.isValidNodeType(node)) return;
+
 				menu.addItem((item) => {
 					item.setTitle("Set link")
 						.setIcon("link")
@@ -36,11 +38,58 @@ export default class CanvasImageLinkPlugin extends Plugin {
 							new SampleModal(this.app, node).open();
 						});
 				});
+
+				const link = this.getNodeLink(node);
+				if (link) {
+					menu.addItem((item) => {
+						item.setTitle("Open link")
+							.setIcon("external-link")
+							.onClick(() => {
+								window.open(link);
+							});
+					});
+				}
 			}),
 		);
+
+		// this.addCommand({
+		// 	id: "canvas-set-node-link",
+		// 	name: "Set link of selected canvas node",
+		// 	checkCallback: (checking: boolean) => {
+		// 		if (!checking) {
+		// 			doCommand(value);
+		// 		}
+
+		// 		return true;
+		// 	},
+		// });
 	}
 
-	async handleDblClick(evt: MouseEvent) {
+	tryOpenSelectedNodeLink() {
+		const node = this.getSelectedCanvasNode();
+		if (!node) return;
+		if (!this.isValidNodeType(node)) return;
+
+		let link = this.getNodeLink(node);
+		if (link) {
+			window.open(link);
+		}
+	}
+
+	isValidNodeType(node: CanvasNodeData): boolean {
+		return node.type === "file";
+	}
+
+	getNodeLink(node: CanvasNodeData): string | null {
+		if ("unknownData" in node) {
+			if ("link" in node.unknownData) {
+				return node.unknownData.link;
+			}
+		}
+		return null;
+	}
+
+	getSelectedCanvasNode(): CanvasNodeData | null {
 		const canvasView = this.app.workspace.getActiveViewOfType(ItemView);
 		if (canvasView?.getViewType() === "canvas") {
 			const canvas = (canvasView as any).canvas;
@@ -48,19 +97,12 @@ export default class CanvasImageLinkPlugin extends Plugin {
 			const selection = Array.from(canvas.selection);
 
 			if (selection.length !== 1) {
-				return;
+				return null;
 			}
 			const node = selection[0] as CanvasNodeData;
-			let link = "";
-			if ("unknownData" in node) {
-				if ("link" in node.unknownData) {
-					link = node.unknownData.link;
-					console.log("Link found on node:", link);
-					window.open(link);
-					return;
-				}
-			}
+			return node;
 		}
+		return null;
 	}
 }
 
