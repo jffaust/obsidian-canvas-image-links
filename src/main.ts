@@ -28,7 +28,7 @@ export default class CanvasImageLinkPlugin extends Plugin {
 						item.setTitle("Open link")
 							.setIcon("external-link")
 							.onClick(() => {
-								window.open(link);
+								window.open(sanitizeLink(link));
 							});
 					});
 				}
@@ -58,7 +58,7 @@ export default class CanvasImageLinkPlugin extends Plugin {
 
 		let link = getNodeLink(node);
 		if (link) {
-			window.open(link);
+			window.open(sanitizeLink(link));
 		}
 	}
 
@@ -90,6 +90,13 @@ function getNodeLink(node: any): string {
 		}
 	}
 	return "";
+}
+
+function sanitizeLink(link: string): string {
+	if (/^[a-z][a-z0-9+.-]*:/i.test(link)) {
+		return link;
+	}
+	return `https://${link}`;
 }
 
 class SampleModal extends Modal {
