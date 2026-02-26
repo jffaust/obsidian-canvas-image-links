@@ -34,7 +34,6 @@ export default class CanvasImageLinkPlugin extends Plugin {
 					item.setTitle("Set link")
 						.setIcon("link")
 						.onClick(() => {
-							console.log("Node clicked:", node);
 							new SampleModal(this.app, node).open();
 						});
 				});
@@ -52,17 +51,20 @@ export default class CanvasImageLinkPlugin extends Plugin {
 			}),
 		);
 
-		// this.addCommand({
-		// 	id: "canvas-set-node-link",
-		// 	name: "Set link of selected canvas node",
-		// 	checkCallback: (checking: boolean) => {
-		// 		if (!checking) {
-		// 			doCommand(value);
-		// 		}
+		this.addCommand({
+			id: "canvas-set-node-link",
+			name: "Set link of selected canvas node",
+			checkCallback: (checking: boolean) => {
+				const node = this.getSelectedCanvasNode();
+				if (!node) return false;
+				if (!isValidNodeType(node)) return false;
 
-		// 		return true;
-		// 	},
-		// });
+				if (!checking) {
+					new SampleModal(this.app, node).open();
+				}
+				return true;
+			},
+		});
 	}
 
 	tryOpenSelectedNodeLink() {
