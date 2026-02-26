@@ -28,7 +28,7 @@ export default class CanvasImageLinkPlugin extends Plugin {
 
 		this.registerEvent(
 			this.app.workspace.on("canvas:node-menu", (menu, node) => {
-				if (!this.isValidNodeType(node)) return;
+				if (!isValidNodeType(node)) return;
 
 				menu.addItem((item) => {
 					item.setTitle("Set link")
@@ -39,7 +39,7 @@ export default class CanvasImageLinkPlugin extends Plugin {
 						});
 				});
 
-				const link = this.getNodeLink(node);
+				const link = getNodeLink(node);
 				if (link) {
 					menu.addItem((item) => {
 						item.setTitle("Open link")
@@ -68,25 +68,12 @@ export default class CanvasImageLinkPlugin extends Plugin {
 	tryOpenSelectedNodeLink() {
 		const node = this.getSelectedCanvasNode();
 		if (!node) return;
-		if (!this.isValidNodeType(node)) return;
+		if (!isValidNodeType(node)) return;
 
-		let link = this.getNodeLink(node);
+		let link = getNodeLink(node);
 		if (link) {
 			window.open(link);
 		}
-	}
-
-	isValidNodeType(node: CanvasNodeData): boolean {
-		return node.type === "file";
-	}
-
-	getNodeLink(node: CanvasNodeData): string | null {
-		if ("unknownData" in node) {
-			if ("link" in node.unknownData) {
-				return node.unknownData.link;
-			}
-		}
-		return null;
 	}
 
 	getSelectedCanvasNode(): CanvasNodeData | null {
@@ -106,14 +93,28 @@ export default class CanvasImageLinkPlugin extends Plugin {
 	}
 }
 
+function isValidNodeType(node: CanvasNodeData): boolean {
+	return node.unknownData.type === "file";
+}
+
+function getNodeLink(node: CanvasNodeData): string {
+	if ("unknownData" in node) {
+		if ("link" in node.unknownData) {
+			return node.unknownData.link;
+		}
+	}
+	return "";
+}
+
 class SampleModal extends Modal {
 	constructor(app: App, node: CanvasNode) {
 		super(app);
-		//this.setTitle("What's your name?");
+		this.setTitle("Set node link");
+		this.modalEl.addClass("canvas-node-link-modal");
 
-		let link = "";
+		let link = getNodeLink(node);
 		new Setting(this.contentEl).setName("Link").addText((text) =>
-			text.onChange((value) => {
+			text.setValue(link).onChange((value) => {
 				link = value;
 			}),
 		);
@@ -124,7 +125,7 @@ class SampleModal extends Modal {
 				.setCta()
 				.onClick(() => {
 					this.close();
-					node.setData({ link: link });
+					node.setData({ link });
 				}),
 		);
 	}

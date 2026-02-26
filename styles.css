@@ -6,3 +6,18 @@ available in the app when your plugin is enabled.
 If your plugin does not need CSS, delete this file.
 
 */
+
+.canvas-node-link-modal .setting-item-info {
+    flex: 0 0 auto !important;
+    margin-right: 18px;
+}
+
+.canvas-node-link-modal .setting-item-control {
+    flex: 1 1 auto !important;
+    /* justify-content: flex-end; Default allows buttons to be right-aligned */
+}
+
+.canvas-node-link-modal .setting-item-control input[type="text"] {
+    width: 100% !important;
+    max-width: 100% !important;
+}
