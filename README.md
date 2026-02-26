@@ -2,6 +2,8 @@
 
 Adds the ability to set a link on images in Obsidian Canvas. You can then double click on the image to open the link.
 
+![demo](/docs/showcase.mp4)
+
 ## Features
 
 - Right click on a image shows 2 new menu options: `Set link` and `Open link`
