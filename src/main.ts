@@ -106,20 +106,26 @@ class EditLinkModal extends Modal {
 		this.modalEl.addClass("canvas-node-link-modal");
 
 		let link = getNodeLink(node);
-		new Setting(this.contentEl).setName("Link").addText((text) =>
+
+		const onSubmit = () => {
+			this.close();
+			node.setData({ link });
+		};
+
+		new Setting(this.contentEl).setName("Link").addText((text) => {
 			text.setValue(link).onChange((value) => {
 				link = value;
-			}),
-		);
+			});
+			text.inputEl.addEventListener("keydown", (e) => {
+				if (e.key === "Enter") {
+					e.preventDefault();
+					onSubmit();
+				}
+			});
+		});
 
 		new Setting(this.contentEl).addButton((btn) =>
-			btn
-				.setButtonText("Submit")
-				.setCta()
-				.onClick(() => {
-					this.close();
-					node.setData({ link });
-				}),
+			btn.setButtonText("Submit").setCta().onClick(onSubmit),
 		);
 	}
 }
