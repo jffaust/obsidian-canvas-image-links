@@ -11,6 +11,23 @@ export default class CanvasImageLinkPlugin extends Plugin {
 		);
 
 		this.registerEvent(
+			this.app.workspace.on("layout-change", () => {
+				console.log(
+					"Layout changed, updating canvas node indicators...",
+				);
+				const canvasView = this.app.workspace.getLeavesOfType(
+					"canvas",
+				)[0]?.view as any;
+				if (!canvasView) return;
+
+				const canvas = canvasView.canvas;
+				canvas.nodes.forEach((node: any) => {
+					updateCanvasNodeLinkLabel(node);
+				});
+			}),
+		);
+
+		this.registerEvent(
 			this.app.workspace.on("canvas:node-menu", (menu, node) => {
 				if (!isValidNodeType(node)) return;
 
@@ -79,6 +96,40 @@ export default class CanvasImageLinkPlugin extends Plugin {
 	}
 }
 
+function updateCanvasNodeLinkLabel(node: any, link?: string) {
+	if (!link) {
+		link = getNodeLink(node);
+	}
+
+	if (!node.containerEl) return;
+
+	const nodeEl = node.containerEl.parentElement;
+
+	let indicatorEl = nodeEl.querySelector(".canvas-link-label");
+
+	if (indicatorEl && (!link || link === "")) {
+		indicatorEl.remove();
+		return;
+	}
+
+	if (!indicatorEl) {
+		indicatorEl = document.createElement("div");
+		nodeEl.appendChild(indicatorEl);
+	}
+	indicatorEl.classList.add("canvas-link-label");
+	indicatorEl.setText(link); // Or an icon/shortened URL
+
+	// Style it to appear at the bottom
+	indicatorEl.style.position = "absolute";
+	indicatorEl.style.bottom = "-25px";
+	indicatorEl.style.left = "0%";
+	indicatorEl.style.fontSize = "var(--font-ui-medium)";
+	indicatorEl.style.color = "var(--canvas-card-label-color)";
+	indicatorEl.style.transform = "scale(var(--zoom-multiplier))";
+	indicatorEl.style.transformOrigin = "bottom left";
+	indicatorEl.style.whiteSpace = "nowrap";
+}
+
 function isValidNodeType(node: any): boolean {
 	return node?.unknownData?.type === "file" || "file" in node;
 }
@@ -110,6 +161,7 @@ class EditLinkModal extends Modal {
 		const onSubmit = () => {
 			this.close();
 			node.setData({ link });
+			updateCanvasNodeLinkLabel(node, link);
 		};
 
 		new Setting(this.contentEl).setName("Link").addText((text) => {
