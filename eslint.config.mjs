@@ -6,7 +6,12 @@ import globals from "globals";
 
 export default defineConfig([
 	{
-		ignores: ["main.js", "esbuild.config.mjs", "version-bump.mjs", "node_modules/**"]
+		ignores: [
+			"main.js",
+			"esbuild.config.mjs",
+			"version-bump.mjs",
+			"node_modules/**",
+		],
 	},
 	...obsidianmd.configs.recommended,
 	{
@@ -17,13 +22,13 @@ export default defineConfig([
 			globals: {
 				...globals.browser,
 				...globals.node,
-			}
+			},
 		},
 
 		// You can add your own configuration to override or add rules
 		rules: {
 			// example: turn off a rule from the recommended set
-			"obsidianmd/sample-names": "off",
+			// "obsidianmd/sample-names": "off",
 			// example: add a rule not in the recommended set and set its severity
 			// "obsidianmd/prefer-file-manager-trash": "error",
 		},
