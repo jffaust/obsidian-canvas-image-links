@@ -20,3 +20,14 @@ If your plugin does not need CSS, delete this file.
 	width: 100% !important;
 	max-width: 100% !important;
 }
+
+.canvas-node .canvas-link-label {
+	position: absolute;
+	bottom: -25px;
+	left: 0%;
+	font-size: var(--font-ui-medium);
+	color: var(--canvas-card-label-color);
+	transform: scale(var(--zoom-multiplier));
+	transform-origin: bottom left;
+	white-space: nowrap;
+}

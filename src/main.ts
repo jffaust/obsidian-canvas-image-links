@@ -138,18 +138,6 @@ function updateCanvasNodeLinkLabel(node: CanvasNodeData, link?: string) {
 	}
 	indicatorEl.classList.add("canvas-link-label");
 	indicatorEl.setText(link); // Or an icon/shortened URL
-
-	// Style it to appear at the bottom
-	Object.assign(indicatorEl.style, {
-		position: "absolute",
-		bottom: "-25px",
-		left: "0%",
-		fontSize: "var(--font-ui-medium)",
-		color: "var(--canvas-card-label-color)",
-		transform: "scale(var(--zoom-multiplier))",
-		transformOrigin: "bottom left",
-		whiteSpace: "nowrap",
-	});
 }
 
 function isValidNodeType(node: unknown): node is CanvasNodeData {
