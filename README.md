@@ -14,5 +14,5 @@ https://github.com/user-attachments/assets/388c6279-040b-47ca-8a6b-ac6692dd1481
     - Obsidian: `obsidian://open?vault=myvault&file=Testing.canvas`
 
 ## Manually installing the plugin
-
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/canvas-images-as-links/`.
+- Head over to [the latest release](https://github.com/jffaust/obsidian-canvas-images-as-links/releases/latest) and download `main.js`, `styles.css`, `manifest.json`
+- Copy those files to your vault `VaultFolder/.obsidian/plugins/canvas-images-as-links/`.
