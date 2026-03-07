@@ -12,6 +12,11 @@ https://github.com/user-attachments/assets/388c6279-040b-47ca-8a6b-ac6692dd1481
     - Web: `https://example.com`
     - Files: `file://C:/Users/abc/Desktop/phenomenal.mkv`
     - Obsidian: `obsidian://open?vault=myvault&file=Testing.canvas`
+ 
+The configured link will be displayed underneath the image like this:
+<img width="950" height="667" alt="image" src="https://github.com/user-attachments/assets/f6875390-982d-42ea-8b5c-eb8058303f47" />
+
+
 
 ## Manually installing the plugin
 - Head over to [the latest release](https://github.com/jffaust/obsidian-canvas-images-as-links/releases/latest) and download `main.js`, `styles.css`, `manifest.json`
